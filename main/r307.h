@@ -20,7 +20,7 @@ void r307_init(void);
  * @param instruction_code INSTRUCTION CODE FOR EACH COMMAND
  * @return RETURNS CONFIRMATION CODE RECEIVED FROM THE RESPONSE
  */
-uint8_t r307_reponse(char instruction_code[]);
+uint8_t r307_reponse(char instruction_code);
 
 /**
  * @brief FUNCTION TO PERFORM CHECKSUM MODULE 256
@@ -224,7 +224,7 @@ uint8_t GetRandomCode(char r307_address[]);
  * @param received_package ENTIRE RECEIVED STRING 
  * @return
  */
-void r307_response_parser(char instruction_code[], uint8_t received_package[]);
+void r307_response_parser(char instruction_code, uint8_t received_package[]);
 
 #ifdef __cplusplus
 }

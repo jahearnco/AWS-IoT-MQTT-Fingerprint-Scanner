@@ -14,7 +14,7 @@
 static const int RX_BUF_SIZE = 2048;            //++ UART RX Buffer Size
 static const char *R307_TX = "R307_TX";         //++ UART RX TAG
 
-void r307_response_parser(char instruction_code[], uint8_t received_package[]);
+//void r307_response_parser(char instruction_code[], uint8_t received_package[]);
 
 void r307_init(void)                          
 {
@@ -33,7 +33,7 @@ void r307_init(void)
     uart_set_pin(UART_NUM_1, TXD_PIN, RXD_PIN, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
 }
 
-uint8_t r307_reponse(char instruction_code[])
+uint8_t r307_reponse(char instruction_code)
 {
     uint8_t received_confirmation_code = 0;
     uint8_t *received_package = (uint8_t *)malloc(RX_BUF_SIZE + 1);
@@ -70,10 +70,10 @@ uint16_t check_sum(char tx_cmd_data[], char r307_data[])
         for(int i=0; i<4; i++)
         {
             result = result + tx_cmd_data[i+6];
-            if(i<sizeof(r307_data))
-            {
-                result = result + r307_data[i];
-            }
+            //if(i<sizeof(r307_data))
+            //{
+            //    result = result + r307_data[i];
+            //}
         }
     }
 
@@ -858,7 +858,7 @@ uint8_t GetRandomCode(char r307_address[])
     return confirmation_code;
 }
 
-void r307_response_parser(char instruction_code[], uint8_t received_package[])
+void r307_response_parser(char instruction_code, uint8_t received_package[])
 {
     uint8_t confirmation_code = received_package[9];                                    //++ Get Confirmation Code from received response packet 
 

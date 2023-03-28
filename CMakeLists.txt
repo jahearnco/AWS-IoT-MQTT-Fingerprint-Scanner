@@ -3,13 +3,14 @@
 cmake_minimum_required(VERSION 3.5)
 
 set(EXTRA_COMPONENT_DIRS "$ENV{IDF_PATH}/examples/common_components/protocol_examples_common"
+						 "$ENV{IDF_PATH}/components/esp_hw_support"
 						 "$ENV{IDF_PATH}/../esp-aws-iot/libraries/backoffAlgorithm"
 						 "$ENV{IDF_PATH}/../esp-aws-iot/libraries/coreMQTT"
 						 "$ENV{IDF_PATH}/../esp-aws-iot/libraries/common/posix_compat"
 	)
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
-project(aws iot mqtt fingerprint scanner)
+project(aws-iot-mqtt-fingerprint-scanner)
 
 target_add_binary_data(${CMAKE_PROJECT_NAME}.elf "main/certs/root_cert_auth.crt" TEXT)
 target_add_binary_data(${CMAKE_PROJECT_NAME}.elf "main/certs/client.crt" TEXT)
