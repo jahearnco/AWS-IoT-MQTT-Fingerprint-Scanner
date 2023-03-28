@@ -191,7 +191,7 @@ extern const char root_cert_auth_end[]   asm("_binary_root_cert_auth_crt_end");
 /**
  * @brief The MQTT message published in this example.
  */
-#define MQTT_EXAMPLE_MESSAGE                "Love That Sunshine!"
+#define MQTT_EXAMPLE_MESSAGE                "That Sunshine!"
 
 /**
  * @brief The length of the MQTT message published in this example.
