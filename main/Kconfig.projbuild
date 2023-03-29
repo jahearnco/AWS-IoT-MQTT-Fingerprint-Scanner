@@ -21,6 +21,12 @@ menu "Example Configuration"
             Port 443 requires use of the ALPN TLS extension with the ALPN protocol name.
             When using port 8883, ALPN is not required.
 
+	config MQTT_TOPIC
+        string "The MQTT topic"
+        default "topic"
+        help
+            The MQTT topic to sub n pub
+            
     config HARDWARE_PLATFORM_NAME
         string "The hardware platform"
         default "ESP32"

@@ -1,9 +1,6 @@
 set(COMPONENT_SRCS
-	"main.c"
-	"mqtt_demo_mutual_auth.c"
+	"mqtt_mutual_auth.c"
 	"r307.c"
-	"r307.h"
-
 )
 
 #"r307.c"
