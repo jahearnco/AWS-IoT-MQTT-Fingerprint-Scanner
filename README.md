@@ -1,8 +1,12 @@
-| Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C6 | ESP32-S2 | ESP32-S3 |
-| ----------------- | ----- | -------- | -------- | -------- | -------- | -------- |
+| Supported Targets | ESP32 
+| ----------------- | ----- 
 
 # AWS IoT ESP32-MQTT r307 Fingerprint Sensor Module
 The Following Code is a Library for interfacing r307 Fingerprint Module with ESP32 on Embedded C Language
+
+EPI Workforce Solutions has implemented this fingerprint scanner as a means of securing their facilities and for providing a single source of truth for personnel status and documentation. Scanned images are uploaded to AWS Core IoT via MQTT as topic messages which are then routed to MARCA: EPI's proprietary resource management software suite. MARCA then matches the print to employee profile to pull up status, records, contact info and docs.
+
+The iOS Swift app version of MARCA is immeditely updated for admins "walking the floor" providing them real-time access to employee info.
 
 # GPIO Functions:
 | ESP32 Devkit v1   | r307 Fingerprint Sensor |
