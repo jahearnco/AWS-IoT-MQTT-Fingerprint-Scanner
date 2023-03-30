@@ -2,7 +2,7 @@
 | ----------------- | ----- 
 
 # AWS IoT ESP32-MQTT r307 Fingerprint Sensor Module
-The Following Code is a Library for interfacing r307 Fingerprint Module with ESP32 on Embedded C Language
+The Following Code is a Library for interfacing r307 Fingerprint Module with ESP32 on Embedded C/C++ Language
 
 EPI Workforce Solutions has implemented this fingerprint scanner as a means of securing their facilities and for providing a single source of truth for personnel status and documentation. Scanned images are uploaded to AWS Core IoT via MQTT as topic messages which are then routed to MARCA: EPI's proprietary resource management software suite. MARCA then matches the print to employee profile to pull up status, records, contact info and docs.
 
