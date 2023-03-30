@@ -7,6 +7,10 @@
 extern "C" {
 #endif
 
+void setMqttTopicMessage(char *tx_cmd_data);
+char* getMqttTopicMessage();
+char *concat(const char *a, const char *b);
+
 /**
  * @brief INITIALIZE UART FOR R307 FINGERPRINT MODULE
  *

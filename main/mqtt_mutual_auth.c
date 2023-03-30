@@ -859,13 +859,16 @@ static int publishToTopic( MQTTContext_t * pMqttContext )
     }
     else
     {
-        /* This example publishes to only one topic and uses QOS1. */
+    	char *topicMssg = getMqttTopicMessage();
+    	uint16_t topicMssgLen = ( ( uint16_t ) ( strlen( topicMssg ) - 1 ) );
+
+    	/* This example publishes to only one topic and uses QOS1. */
     	outgoingPublishPackets[ publishIndex ].pubInfo.retain = true;
         outgoingPublishPackets[ publishIndex ].pubInfo.qos = MQTTQoS1;
         outgoingPublishPackets[ publishIndex ].pubInfo.pTopicName = MQTT_EXAMPLE_TOPIC;
         outgoingPublishPackets[ publishIndex ].pubInfo.topicNameLength = MQTT_EXAMPLE_TOPIC_LENGTH;
-        outgoingPublishPackets[ publishIndex ].pubInfo.pPayload = MQTT_MESSAGE;
-        outgoingPublishPackets[ publishIndex ].pubInfo.payloadLength = MQTT_MESSAGE_LENGTH;
+        outgoingPublishPackets[ publishIndex ].pubInfo.pPayload = topicMssg;
+        outgoingPublishPackets[ publishIndex ].pubInfo.payloadLength = topicMssgLen;
 
         /* Get a new packet id. */
         outgoingPublishPackets[ publishIndex ].packetId = MQTT_GetPacketId( pMqttContext );

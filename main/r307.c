@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include "string.h"
+#include "esp_spiffs.h"
 
 #include "esp_log.h"
 
@@ -70,10 +71,10 @@ uint16_t check_sum(char tx_cmd_data[], char r307_data[])
         for(int i=0; i<4; i++)
         {
             result = result + tx_cmd_data[i+6];
-            //if(i<sizeof(r307_data))
-            //{
-            //    result = result + r307_data[i];
-            //}
+            if(i<strlen(r307_data))
+            {
+                result = result + r307_data[i];
+            }
         }
     }
 
@@ -322,6 +323,96 @@ uint8_t GR_Auto(char r307_address[])
     return confirmation_code;
 }
 
+char *FINGERPRINT_MESSAGE = "jimminycrickets";
+
+void setMqttTopicMessage(char *tx_cmd_data){
+	FINGERPRINT_MESSAGE = tx_cmd_data;
+}
+
+char* getMqttTopicMessage(){
+	if (strlen(FINGERPRINT_MESSAGE) < 1){
+		FINGERPRINT_MESSAGE = "IYAM";
+	}
+
+	char* full_text = "";
+	esp_vfs_spiffs_conf_t config = {
+		.base_path = "/spiffs",
+		.partition_label = NULL,
+		.max_files = 5,
+		.format_if_mount_failed = true
+	};
+	esp_vfs_spiffs_register(&config);
+
+	FILE *file = fopen("/spiffs/fingerprint.png", "r");
+	if(file == NULL)
+	{
+		ESP_LOGE("TAG","File does not exist!");
+		FINGERPRINT_MESSAGE = full_text;
+	}
+	else
+	{
+		char *line = "";
+
+		while(fgets(line, strlen(line), file) != NULL)
+		{
+			printf(line);
+			full_text =  concat(full_text, line);
+		}
+		FINGERPRINT_MESSAGE = full_text;
+		fclose(file);
+	}
+	esp_vfs_spiffs_unregister(NULL);
+
+
+	return FINGERPRINT_MESSAGE;
+}
+
+char *concat(const char *a, const char *b);
+
+char *concat(const char *a, const char *b){
+    int lena = strlen(a);
+    int lenb = strlen(b);
+    char *con = malloc(lena+lenb+1);
+    // copy & concat (including string termination)
+    memcpy(con,a,lena);
+    memcpy(con+lena,b,lenb+1);
+    return con;
+}
+
+uint8_t Img2Tz(char r307_address[], char buffer_id[])
+{
+    char tx_cmd_data[13] = {0xEF, 0x01, 0xFF, 0xFF, 0xFF, 0xFF, 0x01, 0x00, 0x04, 0x02};
+    char check_sum_data[2] = {0x00, 0x00};
+    uint8_t confirmation_code = 0;
+
+    uint16_t checksum_value = check_sum(tx_cmd_data, buffer_id);
+    check_sum_data[0] = (checksum_value >> 8) & (0xFF);
+    check_sum_data[1] = checksum_value & (0xFF);
+
+    tx_cmd_data[10] = buffer_id[0];
+    for(int i=0; i<4; i++)
+    {
+        tx_cmd_data[i+2] = r307_address[i];
+        if(i<2)
+        {
+            tx_cmd_data[i+11] = check_sum_data[i];
+        }
+    }
+    
+    char instruction_code;
+
+    instruction_code = tx_cmd_data[9];
+
+    const int package_length = sizeof(tx_cmd_data);
+    const int txBytes = uart_write_bytes(UART_NUM_1, tx_cmd_data, package_length);
+    ESP_LOGI(R307_TX, "Wrote %d bytes", txBytes);
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+
+    confirmation_code = r307_reponse(instruction_code);
+
+    return confirmation_code;
+}
+
 uint8_t GR_Identify(char r307_address[])
 {
     char tx_cmd_data[12] = {0xEF, 0x01, 0xFF, 0xFF, 0xFF, 0xFF, 0x01, 0x00, 0x03, 0x34};
@@ -351,6 +442,18 @@ uint8_t GR_Identify(char r307_address[])
     vTaskDelay(500 / portTICK_PERIOD_MS);
 
     confirmation_code = r307_reponse(instruction_code);
+
+
+    /**
+     * BEGIN :: send char representation to MARCA
+     */
+
+    setMqttTopicMessage(tx_cmd_data);
+
+    /**
+     * END :: send char representation to MARCA
+     */
+
 
     return confirmation_code;
 }
@@ -437,40 +540,6 @@ uint8_t DownImage(char r307_address[])
         if(i<2)
         {
             tx_cmd_data[i+10] = check_sum_data[i];
-        }
-    }
-    
-    char instruction_code;
-
-    instruction_code = tx_cmd_data[9];
-
-    const int package_length = sizeof(tx_cmd_data);
-    const int txBytes = uart_write_bytes(UART_NUM_1, tx_cmd_data, package_length);
-    ESP_LOGI(R307_TX, "Wrote %d bytes", txBytes);
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
-
-    confirmation_code = r307_reponse(instruction_code);
-
-    return confirmation_code;
-}
-
-uint8_t Img2Tz(char r307_address[], char buffer_id[])
-{
-    char tx_cmd_data[13] = {0xEF, 0x01, 0xFF, 0xFF, 0xFF, 0xFF, 0x01, 0x00, 0x04, 0x02};
-    char check_sum_data[2] = {0x00, 0x00};
-    uint8_t confirmation_code = 0;
-
-    uint16_t checksum_value = check_sum(tx_cmd_data, buffer_id);
-    check_sum_data[0] = (checksum_value >> 8) & (0xFF);
-    check_sum_data[1] = checksum_value & (0xFF);
-
-    tx_cmd_data[10] = buffer_id[0];
-    for(int i=0; i<4; i++)
-    {
-        tx_cmd_data[i+2] = r307_address[i];
-        if(i<2)
-        {
-            tx_cmd_data[i+11] = check_sum_data[i];
         }
     }
     
