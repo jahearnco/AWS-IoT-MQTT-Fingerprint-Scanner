@@ -39,12 +39,6 @@ The iOS Swift app version of MARCA is immeditely updated for admins "walking the
 * Please note, everytime you use any function to perform a task, you will have to provide the 32-bits Module address ( Default Address : 0xFF, 0xFF, 0xFF, 0xFF & Default Password : 0x00, 0x00, 0x00, 0x00 )
 * Also note that any extra packet data if being used has to be declared in an char array with hex values as the data.
 
-# Conclusion:
-* Interfacing ESP32 with r307 Fingerprint Sensor wasn't the easiest or the most difficult but I did encountered lot of odds to develop the library on C as whole of the internet happens to use Arduino IDE.
-* Examples codes are not yet available, but if I work on them in future then will surely commit the same.
-* There are two functions missing : "WriteNotepad" & "ReadNotepad". I tried but couldn't crack them, so will commit the same whenever possible in future.
-* Do share with others and I hope you all like it :-D
-
 # Reference Material:
 * https://www.openhacks.com/uploadsproductos/r307_fingerprint_module_user_manual.pdf
 
